@@ -1,3 +1,3 @@
 # Chat-App
 
-> ### developed using websockets, python, js, html and css 
+> ### developed using flask_socektio, python, js, html and css 

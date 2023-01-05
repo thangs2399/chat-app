@@ -1,4 +1,25 @@
 
+const getFormattedDate = (curDate) => {
+    let d = (curDate.getMonth() + 1) + "/" + curDate.getDate() + "/" + curDate.getFullYear();
+    
+    let y = parseInt(curDate.getHours());
+    let en = ""
+    
+    if (y > 12) {
+        y -= 12;
+        en = "p.m";
+    } else if (y == 0) {
+        y = 12
+        en = "a.m";
+    } else {
+        en = "a.m"
+    }
+    
+    y += ":" + curDate.getMinutes() + " " + en;
+    
+    return y + " " + d
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // // connect user to websocket
@@ -33,8 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
             room.textContent = "Room: " + roomNumber.value
             user.textContent = username.value
 
+            let curDate = new Date();
 
-            socketConn.emit("join", roomNumber.value + "&#$" + username.value)
+            let data = {
+                "username": username.value,
+                "room": roomNumber.value,
+                "time": getFormattedDate(curDate),
+            }
+
+            socketConn.emit("join", data)
 
         } else {
             alert("Enter Username!");
@@ -57,16 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // display the new messages ( CLIENT )
     socketConn.addEventListener("displayMessage_c", (data) => {
+
         // create new messageChild to display
         let msg = document.createElement("p");
         msg.classList.add("text");
-        msg.textContent = data;
+        msg.textContent = data["username"] + ": " + data["text"];
 
         // add time detail of the message
         let msgTime = document.createElement("p");
         msgTime.classList.add("time");
-        let curDate = new Date();
-        msgTime.textContent = (curDate.getMonth() + 1) + "/" + curDate.getDate() + "/" + curDate.getFullYear();
+        msgTime.textContent = data["time"];
 
         // msg container to store text and time
         let msgCont = document.createElement("div");
@@ -84,7 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
     sendMessageBtn.addEventListener('click', () => {
         if (username.value) {
             // send message to server ( SERVER )
-            socketConn.emit("sendMessage_s_r", username.value + ": " + messageInput.value + "&#$" + roomNumber.value);
+            let curDate = new Date();
+
+            let msg = {
+                "username": username.value,
+                "text": messageInput.value,
+                "room": roomNumber.value,
+                "time": getFormattedDate(curDate),
+            }
+
+            socketConn.emit("sendMessage_s_r", msg);
         } else {
             alert("Enter Username!");
         }

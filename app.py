@@ -1,7 +1,6 @@
 
 ######################################## IMPORTS ########################################
 
-import jwt
 import datetime
 import os
 
@@ -50,8 +49,8 @@ def room():
 
 ### public chat ###
 
-# join chat
-@socketio.on("connect")
+# load history on join chat
+@socketio.on("loadHistoryPublic")
 def connect():
     print()
     print(20 * "-")
@@ -80,17 +79,16 @@ def newuser_joined_s(msg):
 # join room
 @socketio.on('join')
 def on_join(data):
-    [number, username] = data.split("&#$")
-    room = number
+
+    room = int(data["room"])
     join_room(room)
 
-    joinMsg = f"{username} just connected - {datetime.date.today()}"
+    joinMsg = f"{data['username']} just connected - {data['time']}"
 
-    if (room in roomMsgs.keys()):
+    if (str(room) in roomMsgs.keys()):
 
-        for msg in roomMsgs[f"{room}"]:
-            socketio.emit("displayMessage_c", msg, to=room)
-
+        for data in roomMsgs[f"{room}"]:
+            socketio.emit("displayMessage_c", data, to=room)
     else:
 
         roomMsgs[f"{room}"] = []
@@ -99,13 +97,14 @@ def on_join(data):
 
 # send message
 @socketio.on("sendMessage_s_r")
-def sendMessage_s_r(msg):
+def sendMessage_s_r(data):
 
-    [msg, room] = msg.split("&#$")
+    room = int(data["room"])
 
-    roomMsgs[f"{room}"].append(msg)  
+    roomMsgs[f"{room}"].append(data)  
 
-    socketio.emit("displayMessage_c", msg, to=room)
+    socketio.emit("displayMessage_c", data, to=room)
+
 
 ######################################## RUN THE PROGRAM ########################################
 

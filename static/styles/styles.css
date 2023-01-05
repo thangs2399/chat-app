@@ -305,15 +305,10 @@ main #homepage-room #msg_input_cont #send_msg_btn:hover {
     width: -moz-fit-content;
     width: fit-content;
     min-height: 25px;
-    border: 0.5px solid darkslateblue;
+    border-left: 0.5px solid darkslateblue;
     margin-bottom: 0.3rem;
-    border-radius: 5px;
     font-size: 0.8rem;
     padding: 0.2rem 0.4rem;
-    display: flex;
-    align-items: center;
-    background-color: white;
     outline: none;
-    color: red;
   }
 }/*# sourceMappingURL=styles.css.map */

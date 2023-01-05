@@ -1,5 +1,5 @@
 
-
+// function to get formatted date
 const getFormattedDate = (curDate) => {
     let d = (curDate.getMonth() + 1) + "/" + curDate.getDate() + "/" + curDate.getFullYear();
     

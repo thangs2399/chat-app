@@ -9,5 +9,5 @@
 > - chat history
 
 ## Languages and Tools used
-> frontend - html, css, js
-> backend - flask, and flask_socketio(module) to use websocket
+> - frontend - html, css, js
+> - backend - flask
